@@ -30,6 +30,7 @@ class ResidualDenseBlock(nn.Module):
         default_init_weights([self.conv1, self.conv2, self.conv3, self.conv4, self.conv5], 0.1)
 
     def forward(self, x):
+        print("FORWARD IN ResidualDenseBlock xdatatype=", x.dtype)
         x1 = self.lrelu(self.conv1(x))
         x2 = self.lrelu(self.conv2(torch.cat((x, x1), 1)))
         x3 = self.lrelu(self.conv3(torch.cat((x, x1, x2), 1)))
@@ -56,6 +57,7 @@ class RRDB(nn.Module):
         self.rdb3 = ResidualDenseBlock(num_feat, num_grow_ch)
 
     def forward(self, x):
+        print("FORWARD IN RRDB xdatatype=", x.dtype)
         out = self.rdb1(x)
         out = self.rdb2(out)
         out = self.rdb3(out)
