@@ -106,15 +106,20 @@ class RRDBNet(nn.Module):
 
     def forward(self, x):
         print("FORWARD IN RRDBNET xdatatype=", x.dtype)
-        print("CONV Datatype[", self.conv_first.dtype)
         if self.scale == 2:
             feat = pixel_unshuffle(x, scale=2)
         elif self.scale == 1:
             feat = pixel_unshuffle(x, scale=4)
         else:
             feat = x
+
+        print("feat Datatype[", feat.dtype)
+
         feat = self.conv_first(feat)
         body_feat = self.conv_body(self.body(feat))
+        
+        print("body_feat Datatype[", body_feat.dtype)
+        
         feat = feat + body_feat
         # upsample
         feat = self.lrelu(self.conv_up1(F.interpolate(feat, scale_factor=2, mode='nearest')))
